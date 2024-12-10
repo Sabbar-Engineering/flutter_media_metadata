@@ -50,10 +50,22 @@ public class MetadataRetriever extends MediaMetadataRetriever {
 
     public byte[] getAlbumArt() {
         try {
-            return getEmbeddedPicture();
-        } catch (Exception e) {
+            byte[] albumArt = getEmbeddedPicture();
+            if (albumArt == null) {
+                // Handle the case where no album art is embedded in the media
+                System.out.println("No album art found.");
+            }
+            return albumArt;
+        } catch (IllegalArgumentException e) {
+            // Specific exception when input is invalid (e.g., file format issues)
+            System.err.println("Illegal argument exception while retrieving album art: " + e.getMessage());
             e.printStackTrace();
-            return null;
+        } catch (Exception e) {
+            // Catch any other general exceptions
+            System.err.println("Error occurred while retrieving album art: " + e.getMessage());
+            e.printStackTrace();
         }
+        // Return null or you can return a default album art here
+        return null;
     }
 }
